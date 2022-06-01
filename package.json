@@ -1,0 +1,19 @@
+{
+  "name": "algorithma",
+  "version": "1.0.0",
+  "description": "A collection of algorithms and related structures for learning",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codingLogan/algorithma.git"
+  },
+  "author": "codingLogan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/codingLogan/algorithma/issues"
+  },
+  "homepage": "https://github.com/codingLogan/algorithma#readme"
+}
