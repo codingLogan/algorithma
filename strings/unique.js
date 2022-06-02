@@ -1,28 +1,24 @@
 const assert = require("node:assert");
 
-// Test the algorithm expects
-function test() {
-  const goodValues = ["abcdefg", "123qweasd", "12345qwert"];
-
-  goodValues.forEach((goodValue) => {
-    assert.equal(uniqueString(goodValue), true, "Value should be unique");
-  });
-
-  const badValues = ["1234asdd", "112345abc", "12345aa67890"];
-  badValues.forEach((badValue) => {
-    assert.equal(
-      uniqueString(badValue),
-      false,
-      "Value is expected to not be unique"
-    );
-  });
-}
-
-// Implement the algorithm
-function uniqueString(testableString) {
-  // Break early conditions
-  // Optimization: How many characters are in the set?
-  const ASCII_CHARACTERS = 128; // 7 bits of characters 2^7
+/**
+ * @description A test function that checks a string
+ * and determines if all characters are unique.
+ *
+ * @returns {boolean} true if all characters are unique
+ */
+function stringHasUniqueCharacters(testableString) {
+  /**
+   * Optimizations
+   *
+   * Character set length can help short circuit long
+   * strings.  If more characters are in the string
+   * than are in the set there will be duplicates.
+   *
+   * ASCII = 128
+   * Extended ASCII = 256
+   * UTF-8 = (lots of characters)
+   */
+  const ASCII_CHARACTERS = 128;
   if (testableString.length > ASCII_CHARACTERS) {
     return false;
   }
@@ -40,6 +36,27 @@ function uniqueString(testableString) {
   }
 
   return true;
+}
+
+function test() {
+  const goodValues = ["abcdefg", "123qweasd", "12345qwert"];
+
+  goodValues.forEach((goodValue) => {
+    assert.equal(
+      stringHasUniqueCharacters(goodValue),
+      true,
+      "Characters should be unique"
+    );
+  });
+
+  const badValues = ["1234asdd", "112345abc", "12345aa67890"];
+  badValues.forEach((badValue) => {
+    assert.equal(
+      stringHasUniqueCharacters(badValue),
+      false,
+      "Duplicate characters have been found"
+    );
+  });
 }
 
 test();
