@@ -33,34 +33,31 @@ function urlify(rawString, trueLength) {
   // "star[t] here  "    // "star[t]%20here"
   // No more spaces, we're done
 
-  const urlString = rawString.split("");
+  const urlCharacters = rawString.split("");
 
-  // Start reading where the real string is
+  // Start reading where the real string ends
   let readingIndex = trueLength - 1;
-  let readingCharacter = "";
-  for (
-    let writingCharacterIndex = rawString.length - 1;
-    writingCharacterIndex > 0;
-    writingCharacterIndex--
-  ) {
-    // What character are we reading?
-    readingCharacter = rawString[readingIndex];
 
+  // Start writing at the end of the array
+  for (
+    let writingIndex = urlCharacters.length - 1;
+    writingIndex > 0;
+    writingIndex--
+  ) {
     // Determine which character to write
-    if (readingCharacter !== " ") {
-      urlString[writingCharacterIndex] = readingCharacter;
+    if (urlCharacters[readingIndex] !== " ") {
+      urlCharacters[writingIndex] = urlCharacters[readingIndex];
     } else {
-      urlString[writingCharacterIndex] = "0";
-      writingCharacterIndex -= 1;
-      urlString[writingCharacterIndex] = "2";
-      writingCharacterIndex -= 1;
-      urlString[writingCharacterIndex] = "%";
+      urlCharacters[writingIndex] = "0";
+      urlCharacters[writingIndex - 1] = "2";
+      urlCharacters[writingIndex - 2] = "%";
+      writingIndex -= 2;
     }
 
     readingIndex--;
   }
 
-  return urlString.join("");
+  return urlCharacters.join("");
 }
 
 function test() {
