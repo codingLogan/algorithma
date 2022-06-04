@@ -7,7 +7,7 @@ const assert = require("node:assert");
  * - No "real" words are necessary
  * - Ignore non-letter characters (like spaces)
  * - Case insensitive
- * @returns boolean - true if it is a permutation
+ * @returns boolean - true if it is a permutation of a palindrome
  */
 function isPalindromePermutation(givenString) {
   // Implement isPalindromePermutation
@@ -38,33 +38,33 @@ function isPalindromePermutation(givenString) {
     return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
   });
 
-  let oddCharacterFound = false;
+  let oddCharacterAvailable = true;
   let currentCharacter = "";
   let currentCharacterCount = 0;
 
   for (let stringIndex = 0; stringIndex < stringArray.length; stringIndex++) {
-    // See if we're counting the same character again
     if (
-      currentCharacter.toLowerCase() === stringArray[stringIndex].toLowerCase()
+      currentCharacter.toLowerCase() !== stringArray[stringIndex].toLowerCase()
     ) {
-      // Since it's the same character just count up
-      currentCharacterCount += 1;
-    } else {
-      // Handle logic for the new character
-      // If an odd amount was counted for the previous character, flip the bit or return
-      if (currentCharacterCount % 2 !== 0 && oddCharacterFound) {
-        return false;
-      }
+      // Handle logic for switching to a new character
 
-      // If the current character count is odd flip the bit
+      // If an odd amount was counted for the previous character
       if (currentCharacterCount % 2 !== 0) {
-        oddCharacterFound = true;
+        // If an odd character was already found, this isn't a palindrome
+        if (!oddCharacterAvailable) {
+          return false;
+        }
+
+        // Only one odd character is allowed, don't allow another
+        oddCharacterAvailable = false;
       }
 
       // Reset the counter
       currentCharacter = stringArray[stringIndex];
-      currentCharacterCount = 1;
+      currentCharacterCount = 0;
     }
+
+    currentCharacterCount += 1;
   }
 
   return true;
@@ -73,6 +73,12 @@ function isPalindromePermutation(givenString) {
 function test() {
   // One palindrome is "tacocat" so it returns true
   assert.equal(isPalindromePermutation("Tact Coa"), true);
+
+  // An even based palindrome with extra characters
+  assert.equal(isPalindromePermutation("aa bb cc 1 2 dd ee"), true);
+
+  // A non palindrome
+  assert.equal(isPalindromePermutation("abcdefgyzgfedcba"), true);
 }
 
 test();
