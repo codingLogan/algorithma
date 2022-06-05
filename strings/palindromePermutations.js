@@ -47,7 +47,6 @@ function isPalindromePermutation(givenString) {
       currentCharacter.toLowerCase() !== stringArray[stringIndex].toLowerCase()
     ) {
       // Handle logic for switching to a new character
-
       // If an odd amount was counted for the previous character
       if (currentCharacterCount % 2 !== 0) {
         // If an odd character was already found, this isn't a palindrome
@@ -67,18 +66,69 @@ function isPalindromePermutation(givenString) {
     currentCharacterCount += 1;
   }
 
+  // Final check for if the last character is odd
+  if (!oddCharacterAvailable && currentCharacterCount % 2 !== 0) {
+    return false;
+  }
+
   return true;
+}
+
+function isPalindromePermutationNoSort(givenString) {
+  const canIgnoreCharacter = (character) => {
+    return /[^a-z]/i.test(character);
+  };
+
+  const addOneToCharacter = (character, characterMap) => {
+    const lowerCaseCharacter = character.toLowerCase();
+    if (typeof characterMap[lowerCaseCharacter] === "undefined") {
+      characterMap[lowerCaseCharacter] = 0;
+    }
+
+    // Count how many times each lowerCaseCharacter is used
+    characterMap[lowerCaseCharacter] += 1;
+  };
+
+  const containsValidOddCount = (characterMap) => {
+    let oddAvailable = true;
+    for (const character in characterMap) {
+      if (characterMap[character] % 2 === 1) {
+        if (oddAvailable) {
+          oddAvailable = false;
+        } else {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  };
+
+  const characterMap = {};
+
+  for (let stringIndex = 0; stringIndex < givenString.length; stringIndex++) {
+    if (canIgnoreCharacter(givenString[stringIndex])) {
+      continue;
+    }
+
+    addOneToCharacter(givenString[stringIndex], characterMap);
+  }
+
+  return containsValidOddCount(characterMap);
 }
 
 function test() {
   // One palindrome is "tacocat" so it returns true
   assert.equal(isPalindromePermutation("Tact Coa"), true);
+  assert.equal(isPalindromePermutationNoSort("Tact Coa"), true);
 
   // An even based palindrome with extra characters
   assert.equal(isPalindromePermutation("aa bb cc 1 2 dd ee"), true);
+  assert.equal(isPalindromePermutationNoSort("aa bb cc 1 2 dd ee"), true);
 
   // A non palindrome
-  assert.equal(isPalindromePermutation("abcdefgyzgfedcba"), true);
+  assert.equal(isPalindromePermutation("abcdefgyzgfedcba"), false);
+  assert.equal(isPalindromePermutationNoSort("abcdefgyzgfedcba"), false);
 }
 
 test();
