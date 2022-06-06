@@ -117,18 +117,79 @@ function isPalindromePermutationNoSort(givenString) {
   return containsValidOddCount(characterMap);
 }
 
+function useBitVectorCheck(givenString) {
+  const FIRST_LETTER_CHARACTER = "a".charCodeAt(0);
+
+  const canIgnoreCharacter = (character) => {
+    return /[^a-z]/i.test(character);
+  };
+
+  /**
+   *
+   * @param {string} character expects to be a single character
+   * @returns index value from 0 - 25
+   */
+  const mapCharacterToVector = (character) => {
+    return character.charCodeAt(0) - FIRST_LETTER_CHARACTER;
+  };
+
+  /**
+   *
+   * @param {number} vector current number vector
+   * @param {number} index bit position that should be toggled
+   * @returns
+   */
+  const toggleVectorBit = (vector, index) => {
+    // Move a 1 into the correct place of the number
+    // ex: 1 << 3 is a binary 100
+    const mask = 1 << index;
+    return mask ^ vector;
+  };
+
+  /**
+   * 0 bits are even
+   * 1 bits are odd
+   * @returns true if at most 1 bit is a 1
+   */
+  const hasOnlyOneOddBit = (vector) => {
+    return (vector & (vector - 1)) === 0;
+  };
+
+  const isStringPalindrome = (givenString) => {
+    let vector = 0;
+    for (let charIndex = 0; charIndex < givenString.length; charIndex++) {
+      if (canIgnoreCharacter(givenString[charIndex])) {
+        continue;
+      }
+
+      const character = givenString[charIndex];
+      vector = toggleVectorBit(
+        vector,
+        mapCharacterToVector(character.toLowerCase())
+      );
+    }
+
+    return hasOnlyOneOddBit(vector);
+  };
+
+  return isStringPalindrome(givenString);
+}
+
 function test() {
   // One palindrome is "tacocat" so it returns true
   assert.equal(isPalindromePermutation("Tact Coa"), true);
   assert.equal(isPalindromePermutationNoSort("Tact Coa"), true);
+  assert.equal(useBitVectorCheck("Tact Coa"), true);
 
   // An even based palindrome with extra characters
   assert.equal(isPalindromePermutation("aa bb cc 1 2 dd ee"), true);
   assert.equal(isPalindromePermutationNoSort("aa bb cc 1 2 dd ee"), true);
+  assert.equal(useBitVectorCheck("aa bb cc 1 2 dd ee"), true);
 
   // A non palindrome
   assert.equal(isPalindromePermutation("abcdefgyzgfedcba"), false);
   assert.equal(isPalindromePermutationNoSort("abcdefgyzgfedcba"), false);
+  assert.equal(useBitVectorCheck("abcdefgyzgfedcba"), false);
 }
 
 test();
