@@ -1,33 +1,20 @@
 const assert = require("node:assert");
 
 function compression(givenString) {
+  const OUT_OF_BOUNDS = givenString.length;
   const stringBuilder = [];
-  let currentCharacter = null;
   let count = 0;
 
   for (let index = 0; index < givenString.length; index++) {
-    const character = givenString[index];
+    count++;
+    const currentCharacter = givenString[index];
+    const nextCharacter = givenString[index + 1];
 
-    // Handle first character
-    if (currentCharacter === null) {
-      currentCharacter = character;
-    }
-
-    // Handle all middle characters
-    if (currentCharacter !== character) {
+    // If the character changes, or the last character has been reached
+    if (currentCharacter !== nextCharacter || index + 1 === OUT_OF_BOUNDS) {
       stringBuilder.push(currentCharacter);
       stringBuilder.push(count);
-
-      currentCharacter = character;
       count = 0;
-    }
-
-    count++;
-
-    // Handle final character
-    if (index + 1 === givenString.length) {
-      stringBuilder.push(character);
-      stringBuilder.push(count);
     }
   }
 
