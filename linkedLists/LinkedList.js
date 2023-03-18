@@ -6,6 +6,10 @@ class LinkedList {
     this.head = LinkedList.EMPTY
   }
 
+  setHead(node) {
+    this.head = node
+  }
+
   isEmpty() {
     return this.head === LinkedList.EMPTY
   }
