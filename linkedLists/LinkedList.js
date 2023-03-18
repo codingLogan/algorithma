@@ -62,6 +62,23 @@ class LinkedList {
     }
     console.log(currentNode.value)
   }
+
+  toString() {
+    const nodeValues = []
+    if (this.isEmpty()) {
+      return ''
+    }
+
+    let currentNode = this.head
+    while (currentNode?.next) {
+      nodeValues.push(currentNode.value)
+      currentNode = currentNode.next
+    }
+
+    nodeValues.push(currentNode.value)
+
+    return nodeValues.join(' ')
+  }
 }
 
 class Node {

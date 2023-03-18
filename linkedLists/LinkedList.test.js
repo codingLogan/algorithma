@@ -8,6 +8,8 @@ fifo.push('world')
 fifo.push('!')
 fifo.print()
 
+assert.equal(fifo.toString(), 'hello world !')
+
 assert.equal(fifo.pop(), 'hello')
 assert.equal(fifo.pop(), 'world')
 assert.equal(fifo.pop(), '!')
