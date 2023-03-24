@@ -5,78 +5,82 @@ function listsIntersect(list1, list2) {
   // Sanity check, are the last nodes equal to each other?
   let list1Node = list1.head
   let list1Last = null
+  let list1Length = 0
   while (list1Node !== null) {
     if (list1Node.next === null) {
       list1Last = list1Node
     }
+    list1Length++
     list1Node = list1Node.next
   }
 
   let list2Node = list2.head
   let list2Last = null
+  let list2Length = 0
   while (list2Node !== null) {
     if (list2Node.next === null) {
       list2Last = list2Node
     }
+    list2Length++
     list2Node = list2Node.next
   }
 
   if (list1Last === list2Last) {
-    return true
+    return {
+      intersect: true,
+      list1Length,
+      list2Length,
+    }
   } else {
-    return false
+    return {
+      intersect: false,
+      list1Length,
+      list2Length,
+    }
   }
 }
 
 function findIntersectingNode(list1, list2) {
-  if (!listsIntersect(list1, list2)) {
+  const { intersect, list1Length, list2Length } = listsIntersect(list1, list2)
+
+  if (!intersect) {
     return null
   }
 
-  // Use list1 for checks
-  let list1Length = 0
-  let n1 = list1.head
+  let longerList = null
+  let longerListLength = null
+  let shorterList = null
+  let shorterListLength = null
+  if (list1Length > list2Length) {
+    longerList = list1
+    longerListLength = list1Length
+    shorterList = list2
+    shorterListLength = list2Length
+  } else {
+    longerList = list2
+    longerListLength = list2Length
+    shorterList = list1
+    shorterListLength = list1Length
+  }
+
+  // Use the difference to cut of the front of the longer list
+  const cutOffNumber = longerListLength - shorterListLength
+
+  for (let i = 0; i < cutOffNumber; i++) {
+    longerList.pop()
+  }
+
+  // Compare the lists forwards, until we hit a node that is ===
+  let n1 = longerList.head
+  let n2 = shorterList.head
   while (n1 !== null) {
-    list1Length++
+    if (n1 === n2) {
+      return n1
+    }
+
     n1 = n1.next
+    n2 = n2.next
   }
-
-  // Basic, move back one node at a time
-  let offset = 0
-  while (offset < list1Length) {
-    // Set up lead pointer for list1
-    n1 = list1.head
-    l1 = list1.head
-    let n2 = list2.head
-    let l2 = list2.head
-    for (let i = 0; i < offset; i++) {
-      l1 = l1.next
-      l2 = l2.next
-    }
-
-    // Move list 1 pointers to the offset end
-    while (l1.next !== null) {
-      n1 = n1.next
-      l1 = l1.next
-    }
-
-    // Move list 2 pointers to the offset end
-    while (l2.next !== null) {
-      n2 = n2.next
-      l2 = l2.next
-    }
-
-    // Moving backwards... as soon as nodes aren't equal,
-    // the next node is the intersection
-    // console.log({ n1, n2, l1, l2, offset })
-    if (n1 !== n2) {
-      return n1.next
-    }
-
-    offset++
-  }
-
-  // Advanced Binary Search?
 }
 
 function test() {
@@ -98,13 +102,31 @@ function test() {
   assert.equal(list2Node.next, null)
   list2Node.next = intersectingNode // Make list 2 point to the 3rd node in list1
 
-  assert.equal(listsIntersect(list, list2), true)
+  const { intersect } = listsIntersect(list, list2)
+  assert.equal(intersect, true)
 
   const result = findIntersectingNode(list, list2)
-  // console.log({ result })
   assert.equal(result === intersectingNode, true)
 }
 test()
+
+function test2() {
+  const list = new LinkedList()
+  list.push(1)
+  list.push(2)
+  list.push(3)
+  list.push(4)
+
+  const list2 = new LinkedList()
+  list.push(1)
+  list.push(2)
+  list.push(3)
+  list.push(4)
+
+  const { intersect } = listsIntersect(list, list2)
+  assert.equal(intersect, false)
+}
+test2()
 
 function test3() {
   const list = new LinkedList()
@@ -125,27 +147,10 @@ function test3() {
   assert.equal(list2Node.next, null)
   list2Node.next = intersectingNode // Make list 2 point to the 3rd node in list1
 
-  assert.equal(listsIntersect(list, list2), true)
+  const { intersect } = listsIntersect(list, list2)
+  assert.equal(intersect, true)
 
   const result = findIntersectingNode(list, list2)
-  // console.log({ result })
   assert.equal(result === intersectingNode, true)
 }
 test3()
-
-function test2() {
-  const list = new LinkedList()
-  list.push(1)
-  list.push(2)
-  list.push(3)
-  list.push(4)
-
-  const list2 = new LinkedList()
-  list.push(1)
-  list.push(2)
-  list.push(3)
-  list.push(4)
-
-  assert.equal(listsIntersect(list, list2), false)
-}
-test2()
