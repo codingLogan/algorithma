@@ -31,6 +31,10 @@ class LinkedList {
     }
   }
 
+  enqueue(newValue) {
+    this.push(newValue)
+  }
+
   // Remove the head item and return the value
   pop() {
     if (this.isEmpty()) {
@@ -48,6 +52,10 @@ class LinkedList {
     }
 
     return headCopy.value
+  }
+
+  dequeue() {
+    return this.pop()
   }
 
   createNode(value) {
