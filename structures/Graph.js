@@ -7,6 +7,7 @@ class Graph {
 class Node {
   constructor(name) {
     this.name = name
+    this.status = 1
     this.connections = []
   }
 }
