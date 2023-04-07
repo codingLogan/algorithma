@@ -54,6 +54,10 @@ function canNodeSReachE(graph, s, e) {
   return false
 }
 
+/**
+ *
+ * @param {Graph} graph
+ */
 function addStatusToNodes(graph) {
   graph.nodes.forEach((node) => ({
     ...node,
